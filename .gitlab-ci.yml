@@ -1,0 +1,11 @@
+variables:
+  PEP8_CONFIG_FILE: .flake8
+
+stages:
+  - lint
+
+flake8:
+  stage: lint
+  image: registry.gitlab.com/pipeline-components/flake8:latest
+  script:
+    - flake8 --verbose --config $PEP8_CONFIG_FILE .
