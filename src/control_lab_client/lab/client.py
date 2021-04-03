@@ -26,8 +26,8 @@ class HTTPConnection:
 
         Why?
 
-        Since the
-        `remote-control lab <https://marcomiretti.gitlab.io/remote-control-lab/>`_
+        Since the `remote-control lab
+        <https://marcomiretti.gitlab.io/remote-control-lab/>`_
         servers do not support other methods other than GET just yet, a
         decision was taken, and that behaviour was wrapped into a customized
         URL. ALL the request going out from this function are using the verb
@@ -36,8 +36,8 @@ class HTTPConnection:
 
         The goal from this function, is to make this dirty filthy workaround
         invisible to the user, allowing it to use the
-        aeropendulum API
-        `lab API <https://marcomiretti.gitlab.io/remote-control-lab/openapi.html>`_
+        aeropendulum API `lab API
+        <https://marcomiretti.gitlab.io/remote-control-lab/openapi.html>`_
         as if it supported multiple HTTP verbs.
 
         :param method: HTTP verb, representing the communication method.
@@ -235,9 +235,9 @@ class SystemClient:
             )
 
     def __init__(
-            self, ip, http_resources, ws_resources,
-            http_port=80, ws_port=80, timeout=5
-        ):
+        self, ip, http_resources, ws_resources,
+        http_port=80, ws_port=80, timeout=5,
+    ):
         resourcer = Resourcer(ip, http_port, timeout)
 
         self._http_resources = http_resources
