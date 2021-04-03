@@ -212,9 +212,9 @@ class SystemClient:
     :param ws_resources: Set of Websocket resources.
     :type ws_resources: tuple
     :param http_port: Destination HTTP port.
-    :type http_resources: int
-    :param ws_resources: Destination Websocket port.
-    :type ws_resources: int
+    :type http_port: int
+    :param ws_port: Destination Websocket port.
+    :type ws_port: int
     :param timeout: Timeout for each request.
     :type timeout: float
     """

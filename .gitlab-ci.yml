@@ -3,9 +3,27 @@ variables:
 
 stages:
   - lint
+  - docs
 
 flake8:
   stage: lint
   image: registry.gitlab.com/pipeline-components/flake8:latest
   script:
     - flake8 --verbose --config $PEP8_CONFIG_FILE .
+
+pages:
+  stage: docs
+  image: sphinxdoc/sphinx
+  script:
+    - cd docs
+    - make html
+    - mkdir $CI_PROJECT_DIR/public
+    - mv $CI_PROJECT_DIR/docs/build/html/* $CI_PROJECT_DIR/public
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/public/*
+    expire_in: 1 day
+  rules:
+    - if: '$BUILD_THE_DOCS'
+    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^docs/'
+    - if: '$CI_COMMIT_BRANCH == "master"'
