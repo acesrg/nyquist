@@ -40,7 +40,6 @@ pypi-deploy:
   script:
     - twine upload -u=__token__ -p=$PYPI_UPLOAD_TOKEN dist/*
   rules:
-    - if: '$YES_SERIOUSLY_DEPLOY_TO_PYPI'
     - if: '$CI_COMMIT_TAG =~ /^v\d+.\d+.\d+/'
   tags:
     - local 
