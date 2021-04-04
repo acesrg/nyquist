@@ -31,7 +31,9 @@ pages:
 
 pipy-deploy:
   stage: deploy
-  image: python:3.8.7-slim-buster
+  image: python:3.8.7-buster
+  variables:
+    CRYPTOGRAPHY_DONT_BUILD_RUST: 1
   before_script:
     - pip install twine -q
     - python3 setup.py sdist
