@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath('../../src/'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Control-Lab Client'
+project = 'nyquist'
 copyright = '2021, Marco Miretti'
 author = 'Marco Miretti'
 
@@ -53,8 +53,9 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'classic'
-
+html_theme = 'alabaster'
+html_logo = "_static/logo.png"
+html_favicon = '_static/logo.png'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
