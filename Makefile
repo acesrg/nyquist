@@ -1,6 +1,11 @@
 PEP8_CONFIG_FILE=.flake8
+
 PEP8_DOCKER_IMAGE=pipelinecomponents/flake8
 SPHINX_DOCKER_IMAGE=sphinxdoc/sphinx
+PYTHON_DOCKER_IMAGE=python:3.8.7-slim-buster
+
+DEV_CONTAINER=control_lab_client_dev
+
 DOCKER=docker run -it --rm
 
 pep8:
@@ -9,4 +14,17 @@ pep8:
 docs:
 	${DOCKER} -v $(PWD):/project -w /project/docs ${SPHINX_DOCKER_IMAGE}
 
-.PHONY: pep8 docs
+build:
+	docker run -dit -v $(PWD):/project -w /project --name ${DEV_CONTAINER} ${PYTHON_DOCKER_IMAGE} bash
+	docker exec ${DEV_CONTAINER} pip3 install .
+	docker exec -it ${DEV_CONTAINER} python3
+	docker stop ${DEV_CONTAINER}
+	docker rm ${DEV_CONTAINER}
+
+stop:
+	docker stop ${DEV_CONTAINER}
+
+clean:
+	docker rm ${DEV_CONTAINER}
+
+.PHONY: pep8 docs build stop clean
