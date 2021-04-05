@@ -19,12 +19,14 @@ build:
 	docker exec ${DEV_CONTAINER} pip3 install .
 
 try: build
-	- docker exec -it ${DEV_CONTAINER} python3
+	- docker exec -it ${DEV_CONTAINER} bash
 	docker stop ${DEV_CONTAINER}
 	docker rm ${DEV_CONTAINER}
 
 test: build
-	- docker exec -it ${DEV_CONTAINER} python3 -m unittest discover -v tests/
+	docker exec ${DEV_CONTAINER} pip3 install coverage
+	- docker exec -it ${DEV_CONTAINER} coverage run --source=/usr/local/lib/python3.8/site-packages/nyquist -m unittest discover -v tests/
+	- docker exec -it ${DEV_CONTAINER} coverage report 
 	docker stop ${DEV_CONTAINER}
 	docker rm ${DEV_CONTAINER}
 
