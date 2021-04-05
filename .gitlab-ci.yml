@@ -3,6 +3,7 @@ variables:
 
 stages:
   - lint
+  - test
   - docs
   - deploy
 
@@ -11,6 +12,23 @@ flake8:
   image: registry.gitlab.com/pipeline-components/flake8:latest
   script:
     - flake8 --verbose --config $PEP8_CONFIG_FILE .
+
+installability:
+  stage: test
+  image: python:3.8.7-buster
+  script:
+    - pip install .
+  tags:
+    - local
+
+unittest:
+  stage: test
+  image: python:3.8.7-buster
+  script:
+    - pip install .
+    - python3 -m unittest discover -v tests/
+  tags:
+    - local
 
 pages:
   stage: docs
