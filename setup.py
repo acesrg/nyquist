@@ -26,4 +26,5 @@ setup(
     ],
     package_dir={'': 'src'},
     long_description=read('README.md'),
+    long_description_content_type='text/markdown',
 )
