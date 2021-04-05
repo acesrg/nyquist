@@ -17,7 +17,14 @@ docs:
 build:
 	docker run -dit -v $(PWD):/project -w /project --name ${DEV_CONTAINER} ${PYTHON_DOCKER_IMAGE} bash
 	docker exec ${DEV_CONTAINER} pip3 install .
-	docker exec -it ${DEV_CONTAINER} python3
+
+try: build
+	- docker exec -it ${DEV_CONTAINER} python3
+	docker stop ${DEV_CONTAINER}
+	docker rm ${DEV_CONTAINER}
+
+test: build
+	- docker exec -it ${DEV_CONTAINER} python3 -m unittest discover -v tests/
 	docker stop ${DEV_CONTAINER}
 	docker rm ${DEV_CONTAINER}
 
@@ -27,4 +34,4 @@ stop:
 clean:
 	docker rm ${DEV_CONTAINER}
 
-.PHONY: pep8 docs build stop clean
+.PHONY: pep8 docs build try test stop clean

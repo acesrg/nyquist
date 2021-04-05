@@ -21,6 +21,15 @@ installability:
   tags:
     - local
 
+unittest:
+  stage: test
+  image: python:3.8.7-buster
+  script:
+    - pip install .
+    - python3 -m unittest discover -v tests/
+  tags:
+    - local
+
 pages:
   stage: docs
   image: sphinxdoc/sphinx
