@@ -24,9 +24,17 @@ installability:
 unittest:
   stage: test
   image: python:3.8.7-buster
-  script:
+  before_script:
     - pip install .
-    - python3 -m unittest discover -v tests/
+    - pip install coverage
+  script:
+    - coverage run --source=/usr/local/lib/python3.8/site-packages/nyquist -m unittest discover -v tests/
+  after_script:
+    - coverage report
+    - coverage html
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/htmlcov
   tags:
     - local
 
