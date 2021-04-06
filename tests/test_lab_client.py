@@ -1,6 +1,11 @@
-from nyquist.lab.client import HTTPConnection, Resourcer, SystemClient
-from nyquist.lab.resource_descriptions import Resource
 from unittest import TestCase, mock
+
+from nyquist.lab.client import System
+from nyquist._private.network.http import (
+    _HTTPConnection,
+    _Resourcer,
+    _Resource,
+)
 
 
 class HTTPConnectionTestCase(TestCase):
@@ -8,7 +13,7 @@ class HTTPConnectionTestCase(TestCase):
         self.my_ip = "127.0.0.1"
         self.my_port = 80
         self.my_timeout = 5
-        self.connection = HTTPConnection(
+        self.connection = _HTTPConnection(
             self.my_ip,
             self.my_port,
             self.my_timeout,
@@ -52,8 +57,8 @@ class HTTPConnectionTestCase(TestCase):
         self.assertEqual(retval, "hey")
 
 
-@mock.patch('nyquist.lab.client.HTTPConnection.request')
-@mock.patch('nyquist.lab.client.HTTPConnection.getresponse')
+@mock.patch('nyquist._private.network.http._HTTPConnection.request')
+@mock.patch('nyquist._private.network.http._HTTPConnection.getresponse')
 class ResourcerTestCase(TestCase):
     def _mocky_response(self):
         return str.encode(self.mocky_response_value + "\n")
@@ -62,7 +67,7 @@ class ResourcerTestCase(TestCase):
         self.my_ip = "127.0.0.1"
         self.my_port = 80
         self.my_timeout = 5
-        self.resourcer = Resourcer(
+        self.resourcer = _Resourcer(
             self.my_ip,
             self.my_port,
             self.my_timeout,
@@ -96,25 +101,25 @@ class ResourcerTestCase(TestCase):
         )
 
 
-@mock.patch('nyquist.lab.client.Resourcer.get')
-@mock.patch('nyquist.lab.client.Resourcer.post')
-class SystemClientTestCase(TestCase):
+@mock.patch('nyquist._private.network.http._Resourcer.get')
+@mock.patch('nyquist._private.network.http._Resourcer.post')
+class SystemTestCase(TestCase):
     def setUp(self):
         self.my_ip = "127.0.0.1"
         self.my_http_resources = [
-            Resource(
+            _Resource(
                 uri="/hey/it_is/the/uri",
                 methods=["GET", "POST"],
                 docs="No docs, how naughty."
             ),
-            Resource(
+            _Resource(
                 uri="/hey/it_is/another/uri",
                 methods=["GET"],
                 docs="Always documment your sources!."
             ),
         ]
 
-        self.system = SystemClient(
+        self.system = System(
             ip=self.my_ip,
             http_resources=self.my_http_resources,
             ws_resources=None,
