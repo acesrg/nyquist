@@ -8,14 +8,18 @@ from nyquist._private.network.http import (
 class System:
     """Generates an object with the complete resource tree as attributes.
 
-    Given an IP address or Domain, and a tuple of resources, when instancing
-    the class, it will walk through every resource path, creating class
-    attributes and sub-attributes, matching the resources.
+    An instance from System defines a laboratory sistem completely, and allows
+    the user to interact with it.
+
+    Given an IP address or Domain, and a tuple of resources (like
+    :data:`~resource_descriptions.AEROPENDULUM_HTTP_RESOURCES`), when
+    instancing the class, it will walk through every resource path, creating
+    object attributes and sub-attributes, matching the resources.
 
     The last word of each URL, each resource is an :class:`_Endpoint`, that
-    according the methods assigned to the resource, will have
-    :meth:`_Resourcer.get`, :meth:`_Resorcer.post` or any HTTP verb provided
-    in the resource.methods.
+    according the methods assigned to the resource, will have a
+    :meth:`~nyquist._private.network.http._Resourcer.get` and/or
+    :meth:`~nyquist._private.network.http._Resorcer.post` method.
 
     :param ip: An IP address or domain.
     :type ip: str

@@ -113,7 +113,9 @@ class _Resourcer(_HTTPConnection):
     def get(self, resource, retval_mode="payload"):
         """Gets the value of a resource.
 
-        :param resource: The resource whose value we want.
+        :param resource: The resource whose value we want. If using any
+                         :class:`nyquist.lab.client.System` object, this
+                         argument mustn't be passed.
         :type resource: string
         :param retval_mode: The type of return value we expect.
         :type retval_mode: string
@@ -128,7 +130,9 @@ class _Resourcer(_HTTPConnection):
     def post(self, resource, value, retval_mode="code"):
         """Gets the value of a resource.
 
-        :param resource: The resource whose value we want to set.
+        :param resource: The resource whose value we want to set. If using any
+                         :class:`nyquist.lab.client.System` object, this
+                         argument mustn't be passed.
         :type resource: string
         :param value: The resource whose value we want to set.
         :type value: depends on the resource

@@ -15,6 +15,13 @@ nyquist's documentation
    :undoc-members:
    :show-inheritance:
 
+.. autodata:: nyquist.lab.resource_descriptions.AEROPENDULUM_HTTP_RESOURCES
+   :annotation:
+
+.. automethod:: nyquist._private.network.http._Resourcer.get
+.. automethod:: nyquist._private.network.http._Resourcer.post
+
+
 Indices and tables
 ==================
 
