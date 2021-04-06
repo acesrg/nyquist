@@ -1,11 +1,8 @@
-from collections import namedtuple
-
-
-Resource = namedtuple("Resource", ["uri", "methods", "docs"])
+from nyquist._private.network.http import _Resource
 
 
 AEROPENDULUM_HTTP_RESOURCES = (
-    Resource(
+    _Resource(
         uri="/logger/level",
         methods=["GET", "POST"],
         docs=(
@@ -17,7 +14,7 @@ AEROPENDULUM_HTTP_RESOURCES = (
             "        'LOG_ERROR'"
         )
     ),
-    Resource(
+    _Resource(
         uri="/propeller/pwm/status",
         methods=["GET", "POST"],
         docs=(
@@ -25,7 +22,7 @@ AEROPENDULUM_HTTP_RESOURCES = (
             "Values: 'initialized', 'disabled'"
         )
     ),
-    Resource(
+    _Resource(
         uri="/telemetry/period",
         methods=["GET", "POST"],
         docs=(
@@ -33,7 +30,7 @@ AEROPENDULUM_HTTP_RESOURCES = (
             "Values: float from 1 to 60000"
         )
     ),
-    Resource(
+    _Resource(
         uri="/test/resource",
         methods=["GET", "POST"],
         docs=(
@@ -41,14 +38,14 @@ AEROPENDULUM_HTTP_RESOURCES = (
             "Values: string up to 16 chars."
         )
     ),
-    Resource(
+    _Resource(
         uri="/test/parent_resource",
         methods=["GET"],
         docs=(
             "The value of it's child resources, jsonized."
         )
     ),
-    Resource(
+    _Resource(
         uri="/test/parent_resource/child_a",
         methods=["GET", "POST"],
         docs=(
@@ -56,7 +53,7 @@ AEROPENDULUM_HTTP_RESOURCES = (
             "Values: string up to 16 chars."
         )
     ),
-    Resource(
+    _Resource(
         uri="/test/parent_resource/child_b",
         methods=["GET", "POST"],
         docs=(
@@ -65,3 +62,7 @@ AEROPENDULUM_HTTP_RESOURCES = (
         )
     ),
 )
+"""
+The aeropendulum system HTTP resources, containing uri path, methods, and
+references for the user.
+"""
