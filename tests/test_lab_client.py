@@ -6,6 +6,7 @@ from nyquist._private.network.http import (
     _Resourcer,
     _Resource,
 )
+from nyquist._private.network.ws import _WSResourcer
 
 
 class HTTPConnectionTestCase(TestCase):
@@ -99,6 +100,25 @@ class ResourcerTestCase(TestCase):
             mock.call("POST", "/some/unfunny/resource?value=" + str(10)),
             mock_request.call_args,
         )
+
+
+@mock.patch('websockets.connect')
+class ResourcerTestCase(TestCase):
+    def _mocky_response(self):
+        return str.encode(self.mocky_response_value + "\n")
+
+    def setUp(self):
+        self.my_ip = "127.0.0.1"
+        self.my_port = 80
+        self.my_timeout = 5
+        self.resourcer = _WSResourcer(
+            self.my_ip,
+            self.my_port,
+            self.my_timeout,
+        )
+
+    def test_get_method(self, mock_ws_connect):
+        pass
 
 
 @mock.patch('nyquist._private.network.ws._WSResourcer.get')
