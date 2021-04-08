@@ -2,6 +2,7 @@
 ignore =
 exclude =
     .git,
+    .venv/,
     __pycache__,
     old,
     build,
