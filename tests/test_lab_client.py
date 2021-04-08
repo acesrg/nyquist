@@ -101,6 +101,8 @@ class ResourcerTestCase(TestCase):
         )
 
 
+@mock.patch('nyquist._private.network.ws._WSResourcer.get')
+@mock.patch('nyquist._private.network.ws._WSResourcer.post')
 @mock.patch('nyquist._private.network.http._Resourcer.get')
 @mock.patch('nyquist._private.network.http._Resourcer.post')
 class SystemTestCase(TestCase):
@@ -119,13 +121,33 @@ class SystemTestCase(TestCase):
             ),
         ]
 
+        self.my_ws_resources = [
+            _Resource(
+                uri="/hey/ws/uri",
+                methods=["GET", "POST"],
+                docs="No docs, how naughty."
+            ),
+            _Resource(
+                uri="/hey/ws/uri2",
+                methods=["GET"],
+                docs="Always documment your sources!."
+            ),
+        ]
+
         self.system = System(
             ip=self.my_ip,
             http_resources=self.my_http_resources,
-            ws_resources=[],
+            ws_resources=self.my_ws_resources,
         )
 
-    def test_correct_attributes(self, mock_post, mock_get):
+    def test_correct_attributes(
+        self,
+        mock_post,
+        mock_get,
+        mock_ws_post,
+        mock_ws_get
+
+    ):
         def get_public_attributes_list(obj):
             attr_list = list(obj.__dict__.keys())
             for attr in obj.__dict__.keys():
@@ -137,7 +159,7 @@ class SystemTestCase(TestCase):
         self.assertListEqual(["hey"], attrs)
 
         attrs = get_public_attributes_list(self.system.hey)
-        self.assertListEqual(["it_is"], attrs)
+        self.assertListEqual(["it_is", "ws"], attrs)
 
         attrs = get_public_attributes_list(self.system.hey.it_is)
         self.assertListEqual(["the", "another"], attrs)
@@ -154,7 +176,16 @@ class SystemTestCase(TestCase):
         attrs = get_public_attributes_list(self.system.hey.it_is.another.uri)
         self.assertListEqual(["help", "get"], attrs)
 
-    def test_calls(self, mock_post, mock_get):
+        attrs = get_public_attributes_list(self.system.hey.ws)
+        self.assertListEqual(["uri", "uri2"], attrs)
+
+        attrs = get_public_attributes_list(self.system.hey.ws.uri)
+        self.assertListEqual(["help", "get", "post"], attrs)
+
+        attrs = get_public_attributes_list(self.system.hey.ws.uri2)
+        self.assertListEqual(["help", "get"], attrs)
+
+    def test_calls(self, mock_post, mock_get, mock_ws_post, mock_ws_get):
         self.system.hey.it_is.the.uri.post("some")
         self.assertEqual(
             mock_post.call_args,
@@ -168,7 +199,14 @@ class SystemTestCase(TestCase):
         )
 
     @mock.patch('builtins.print')
-    def test_docs(self, mock_post, mock_get, mock_print):
+    def test_docs(
+        self,
+        mock_post,
+        mock_get,
+        mock_ws_post,
+        mock_ws_get,
+        mock_print
+    ):
         self.system.hey.it_is.the.uri.help()
         self.assertEqual(
             print.call_args,
