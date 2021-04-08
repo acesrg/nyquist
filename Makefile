@@ -16,7 +16,7 @@ docs:
 
 build:
 	docker run -dit -v $(PWD):/project -w /project --name ${DEV_CONTAINER} ${PYTHON_DOCKER_IMAGE} bash
-	docker exec ${DEV_CONTAINER} pip3 install .
+	docker exec ${DEV_CONTAINER} pip3 install -r requirements.txt
 
 try: build
 	- docker exec -it ${DEV_CONTAINER} bash
@@ -24,6 +24,7 @@ try: build
 	docker rm ${DEV_CONTAINER}
 
 test: build
+	docker exec ${DEV_CONTAINER} pip3 install .
 	docker exec ${DEV_CONTAINER} pip3 install coverage
 	- docker exec -it ${DEV_CONTAINER} coverage run --source=/usr/local/lib/python3.8/site-packages/nyquist -m unittest discover -v tests/
 	- docker exec -it ${DEV_CONTAINER} coverage report 
