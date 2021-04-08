@@ -1,8 +1,13 @@
+PROJECT_NAME=nyquist
+
 PEP8_CONFIG_FILE=.flake8
 
+DOCS_DOCKERFILE=.gci/Dockerfile.docs
+DOCS_IMAGE=${PROJECT_NAME}_docs_image
+DEV_DOCKERFILE=.gci/Dockerfile.dev
+DEV_IMAGE=${PROJECT_NAME}_dev_image
+
 PEP8_DOCKER_IMAGE=pipelinecomponents/flake8
-SPHINX_DOCKER_IMAGE=sphinxdoc/sphinx
-PYTHON_DOCKER_IMAGE=python:3.8.7-slim-buster
 
 DEV_CONTAINER=control_lab_client_dev
 
@@ -11,19 +16,24 @@ DOCKER=docker run -it --rm
 pep8:
 	${DOCKER} -v $(PWD):/project -w /project ${PEP8_DOCKER_IMAGE} flake8 --config $(PEP8_CONFIG_FILE) .
 
-docs:
-	${DOCKER} -v $(PWD):/project -w /project/docs ${SPHINX_DOCKER_IMAGE}
+build_docs:
+	docker build -f ${DOCS_DOCKERFILE} -t ${DOCS_IMAGE} .
 
-build:
-	docker run -dit -v $(PWD):/project -w /project --name ${DEV_CONTAINER} ${PYTHON_DOCKER_IMAGE} bash
-	docker exec ${DEV_CONTAINER} pip3 install -r requirements.txt
+docs: build_docs
+	${DOCKER} -v $(PWD):/project -w /project/docs ${DOCS_IMAGE}
 
-try: build
+build_dev:
+	docker build -f ${DEV_DOCKERFILE} -t ${DEV_IMAGE} .
+
+run_dev: build_dev
+	docker run -dit -v $(PWD):/project -w /project --name ${DEV_CONTAINER} ${DEV_IMAGE} bash
+
+try: run_dev
 	- docker exec -it ${DEV_CONTAINER} bash
 	docker stop ${DEV_CONTAINER}
 	docker rm ${DEV_CONTAINER}
 
-test: build
+test: run_dev
 	docker exec ${DEV_CONTAINER} pip3 install .
 	docker exec ${DEV_CONTAINER} pip3 install coverage
 	- docker exec -it ${DEV_CONTAINER} coverage run --source=/usr/local/lib/python3.8/site-packages/nyquist -m unittest discover -v tests/
@@ -37,4 +47,4 @@ stop:
 clean:
 	docker rm ${DEV_CONTAINER}
 
-.PHONY: pep8 docs build try test stop clean
+.PHONY: pep8 build_docs docs build_dev run_dev try test stop clean
