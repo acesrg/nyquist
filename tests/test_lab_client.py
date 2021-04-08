@@ -122,7 +122,7 @@ class SystemTestCase(TestCase):
         self.system = System(
             ip=self.my_ip,
             http_resources=self.my_http_resources,
-            ws_resources=None,
+            ws_resources=[],
         )
 
     def test_correct_attributes(self, mock_post, mock_get):
