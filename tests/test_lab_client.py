@@ -1,4 +1,5 @@
-from unittest import TestCase, mock
+import asyncio
+from unittest import TestCase, IsolatedAsyncioTestCase, mock
 
 from nyquist.lab.client import System
 from nyquist._private.network.http import (
@@ -6,6 +7,7 @@ from nyquist._private.network.http import (
     _Resourcer,
     _Resource,
 )
+from nyquist._private.network.ws import _WSResourcer
 
 
 class HTTPConnectionTestCase(TestCase):
@@ -101,6 +103,87 @@ class ResourcerTestCase(TestCase):
         )
 
 
+@mock.patch('websockets.client.WebSocketClientProtocol')
+@mock.patch('websockets.connect')
+class WSResourcerTestCase(IsolatedAsyncioTestCase):
+    def _mocky_response(self):
+        return str.encode(self.mocky_response_value + "\n")
+
+    def setUp(self):
+        self.my_ip = "127.0.0.1"
+        self.my_port = 80
+        self.my_timeout = 0.1
+        self.resourcer = _WSResourcer(
+            self.my_ip,
+            self.my_port,
+            self.my_timeout,
+        )
+
+    async def fake_telemetry(self):
+        await asyncio.sleep(0.05)
+        return '{"angle": "0x0000", "error": "0x0000"}'
+
+    async def test_connection(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_recv.side_effect = self.fake_telemetry
+
+        self.resourcer.post("/propeller/pwm/duty", 10)
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(
+            mock_connect.call_args,
+            mock.call('ws://127.0.0.1/stream')
+        )
+
+    async def test_post_method(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_send = mock_context_manager_enter.return_value.send
+        mock_recv.side_effect = self.fake_telemetry
+
+        self.resourcer.post("/propeller/pwm/duty", 10)
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(
+            mock_send.call_args,
+            mock.call('{"duty": "0x1E61"}')
+        )
+
+    async def test_get_method(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_recv.side_effect = self.fake_telemetry
+
+        # first initialize
+        self.resourcer.get("/sensors/encoder/angle")
+        await asyncio.sleep(0.1)
+
+        # after waiting for telemetry to arrive, ask
+        result = self.resourcer.get("/sensors/encoder/angle")
+
+        self.assertEqual(result, 22)
+
+    async def test_fake_uris(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_recv.side_effect = self.fake_telemetry
+
+        # first initialize
+        self.resourcer.get("/sensors/encoder/angle")
+        await asyncio.sleep(0.1)
+
+        with self.assertRaises(ValueError):
+            self.resourcer.post("/fakeuri", 10)
+            await asyncio.sleep(0.01)
+
+        with self.assertRaises(ValueError):
+            self.resourcer.get("/fakeuri")
+            await asyncio.sleep(0.01)
+
+
+@mock.patch('nyquist._private.network.ws._WSResourcer.get')
+@mock.patch('nyquist._private.network.ws._WSResourcer.post')
 @mock.patch('nyquist._private.network.http._Resourcer.get')
 @mock.patch('nyquist._private.network.http._Resourcer.post')
 class SystemTestCase(TestCase):
@@ -119,13 +202,33 @@ class SystemTestCase(TestCase):
             ),
         ]
 
+        self.my_ws_resources = [
+            _Resource(
+                uri="/hey/ws/uri",
+                methods=["GET", "POST"],
+                docs="No docs, how naughty."
+            ),
+            _Resource(
+                uri="/hey/ws/uri2",
+                methods=["GET"],
+                docs="Always documment your sources!."
+            ),
+        ]
+
         self.system = System(
             ip=self.my_ip,
             http_resources=self.my_http_resources,
-            ws_resources=None,
+            ws_resources=self.my_ws_resources,
         )
 
-    def test_correct_attributes(self, mock_post, mock_get):
+    def test_correct_attributes(
+        self,
+        mock_post,
+        mock_get,
+        mock_ws_post,
+        mock_ws_get
+
+    ):
         def get_public_attributes_list(obj):
             attr_list = list(obj.__dict__.keys())
             for attr in obj.__dict__.keys():
@@ -137,7 +240,7 @@ class SystemTestCase(TestCase):
         self.assertListEqual(["hey"], attrs)
 
         attrs = get_public_attributes_list(self.system.hey)
-        self.assertListEqual(["it_is"], attrs)
+        self.assertListEqual(["it_is", "ws"], attrs)
 
         attrs = get_public_attributes_list(self.system.hey.it_is)
         self.assertListEqual(["the", "another"], attrs)
@@ -154,7 +257,16 @@ class SystemTestCase(TestCase):
         attrs = get_public_attributes_list(self.system.hey.it_is.another.uri)
         self.assertListEqual(["help", "get"], attrs)
 
-    def test_calls(self, mock_post, mock_get):
+        attrs = get_public_attributes_list(self.system.hey.ws)
+        self.assertListEqual(["uri", "uri2"], attrs)
+
+        attrs = get_public_attributes_list(self.system.hey.ws.uri)
+        self.assertListEqual(["help", "get", "post"], attrs)
+
+        attrs = get_public_attributes_list(self.system.hey.ws.uri2)
+        self.assertListEqual(["help", "get"], attrs)
+
+    def test_calls(self, mock_post, mock_get, mock_ws_post, mock_ws_get):
         self.system.hey.it_is.the.uri.post("some")
         self.assertEqual(
             mock_post.call_args,
@@ -168,7 +280,14 @@ class SystemTestCase(TestCase):
         )
 
     @mock.patch('builtins.print')
-    def test_docs(self, mock_post, mock_get, mock_print):
+    def test_docs(
+        self,
+        mock_post,
+        mock_get,
+        mock_ws_post,
+        mock_ws_get,
+        mock_print
+    ):
         self.system.hey.it_is.the.uri.help()
         self.assertEqual(
             print.call_args,

@@ -17,6 +17,7 @@ installability:
   stage: test
   image: python:3.8.7-buster
   script:
+    - pip install -r requirements.txt
     - pip install .
   tags:
     - local
@@ -25,6 +26,7 @@ unittest:
   stage: test
   image: python:3.8.7-buster
   before_script:
+    - pip install -r requirements.txt
     - pip install .
     - pip install coverage
   script:
@@ -42,6 +44,7 @@ pages:
   stage: docs
   image: sphinxdoc/sphinx
   script:
+    - pip install -r requirements.txt
     - cd docs
     - make html
     - mkdir $CI_PROJECT_DIR/public

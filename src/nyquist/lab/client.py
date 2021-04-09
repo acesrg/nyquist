@@ -3,6 +3,9 @@ from nyquist._private.network.http import (
     _Void,
     _Endpoint,
 )
+from nyquist._private.network.ws import (
+    _WSResourcer,
+)
 
 
 class System:
@@ -54,10 +57,23 @@ class System:
         self, ip, http_resources, ws_resources,
         http_port=80, ws_port=80, timeout=5,
     ):
-        resourcer = _Resourcer(ip, http_port, timeout)
+        http_resourcer = _Resourcer(ip, http_port, timeout)
+        ws_resourcer = _WSResourcer(ip, ws_port, timeout)
 
-        self._http_resources = http_resources
-
-        for http_resource in self._http_resources:
+        for http_resource in http_resources:
             iterable_path = list(filter(None, http_resource.uri.split("/")))
-            self.__generate_tree(self, resourcer, iterable_path, http_resource)
+            self.__generate_tree(
+                self,
+                http_resourcer,
+                iterable_path,
+                http_resource
+            )
+
+        for ws_resource in ws_resources:
+            iterable_path = list(filter(None, ws_resource.uri.split("/")))
+            self.__generate_tree(
+                self,
+                ws_resourcer,
+                iterable_path,
+                ws_resource
+            )
