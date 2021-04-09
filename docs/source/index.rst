@@ -15,13 +15,8 @@ nyquist's documentation
    :undoc-members:
    :show-inheritance:
 
-.. autodata:: nyquist.lab.resource_descriptions.AEROPENDULUM_HTTP_RESOURCES
-   :annotation:
-.. autodata:: nyquist.lab.resource_descriptions.AEROPENDULUM_WS_RESOURCES
-   :annotation:
-
-.. automethod:: nyquist._private.network.http._Resourcer.get
-.. automethod:: nyquist._private.network.http._Resourcer.post
+.. automethod:: nyquist._private.network.http._HTTPResourcer.get
+.. automethod:: nyquist._private.network.http._HTTPResourcer.post
 .. automethod:: nyquist._private.network.ws._WSResourcer.get
 .. automethod:: nyquist._private.network.ws._WSResourcer.post
 
