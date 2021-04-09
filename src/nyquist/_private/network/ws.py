@@ -11,6 +11,12 @@ class _WSResourcer():
         self._uri = "ws://{}/stream".format(ip)
         self._port = port
         self._timeout = timeout
+        self._post_uri_resource_map = {
+            "/propeller/pwm/duty": "duty",
+        }
+        self._get_uri_resource_map = {
+            "/sensors/encoder/angle": "angle",
+        }
         self.new_message = False
 
     def __start_telemetry(self):
@@ -40,13 +46,13 @@ class _WSResourcer():
 
     @staticmethod
     def _decode(message, resource):
-        if resource == "/sensors/encoder/angle":
-            if message is not None:
-                aero_angle = int(message["angle"], 16)
-                return _WSResourcer._aero_angle_to_deg(aero_angle)
-            else:
-                return message
-        raise IOError
+        if message is not None:
+            value = int(message[resource], 16)
+            if resource == "angle":
+                value = _WSResourcer._aero_angle_to_deg(value)
+            return value
+        else:
+            return message
 
     @staticmethod
     def _duty_percent_to_duty_aero(duty_percent):
@@ -56,11 +62,10 @@ class _WSResourcer():
 
     @staticmethod
     def _encode(message, resource):
-        if resource == "/propeller/pwm/duty":
-            duty = _WSResourcer._duty_percent_to_duty_aero(message)
-            json_data = {"duty": "0x{:X}".format(int(duty))}
-            return json.dumps(json_data)
-        raise IOError
+        if resource == "duty":
+            message = _WSResourcer._duty_percent_to_duty_aero(message)
+        json_data = {resource: "0x{:X}".format(int(message))}
+        return json.dumps(json_data)
 
     def get(self, resource):
         """Gets the last telemetry value of given resource.
@@ -78,17 +83,26 @@ class _WSResourcer():
         be set to true. This way the user can implement methods to avoid
         reading the same message twice.
         """
+        if resource not in self._get_uri_resource_map:
+            raise ValueError("{} is not a valid uri.".format(resource))
         if not self._connected:
             self.__start_telemetry()
         self.new_message = False
-        return self._decode(self._last_ws_message, resource)
+        decoded = self._decode(
+            self._last_ws_message,
+            self._get_uri_resource_map[resource]
+        )
+        return decoded
 
     def post(self, resource, value):
         """Sets the value of a resource through a fast channel,
         asynchronously.
         """
+        if resource not in self._post_uri_resource_map:
+            raise ValueError("{} is not a valid uri.".format(resource))
         if not self._connected:
             self.__start_telemetry()
 
         loop = asyncio.get_event_loop()
-        loop.create_task(self.__async_send(self._encode(value, resource)))
+        encoded = self._encode(value, self._post_uri_resource_map[resource])
+        loop.create_task(self.__async_send(encoded))
