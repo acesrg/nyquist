@@ -38,6 +38,7 @@ test: run_dev
 	docker exec ${DEV_CONTAINER} pip3 install coverage
 	- docker exec -it ${DEV_CONTAINER} coverage run --source=/usr/local/lib/python3.8/site-packages/nyquist -m unittest discover -v tests/
 	- docker exec -it ${DEV_CONTAINER} coverage report 
+	- docker exec -it ${DEV_CONTAINER} coverage html
 	docker stop ${DEV_CONTAINER}
 	docker rm ${DEV_CONTAINER}
 
