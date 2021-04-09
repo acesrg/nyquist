@@ -1,4 +1,5 @@
-from unittest import TestCase, mock
+import asyncio
+from unittest import TestCase, IsolatedAsyncioTestCase, mock
 
 from nyquist.lab.client import System
 from nyquist._private.network.http import (
@@ -102,23 +103,83 @@ class ResourcerTestCase(TestCase):
         )
 
 
+@mock.patch('websockets.client.WebSocketClientProtocol')
 @mock.patch('websockets.connect')
-class ResourcerTestCase(TestCase):
+class WSResourcerTestCase(IsolatedAsyncioTestCase):
     def _mocky_response(self):
         return str.encode(self.mocky_response_value + "\n")
 
     def setUp(self):
         self.my_ip = "127.0.0.1"
         self.my_port = 80
-        self.my_timeout = 5
+        self.my_timeout = 0.1
         self.resourcer = _WSResourcer(
             self.my_ip,
             self.my_port,
             self.my_timeout,
         )
 
-    def test_get_method(self, mock_ws_connect):
-        pass
+    async def fake_telemetry(self):
+        await asyncio.sleep(0.05)
+        return '{"angle": "0x0000", "error": "0x0000"}'
+
+    async def test_connection(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_recv.side_effect = self.fake_telemetry
+
+        self.resourcer.post("/propeller/pwm/duty", 10)
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(
+            mock_connect.call_args,
+            mock.call('ws://127.0.0.1/stream')
+        )
+
+    async def test_post_method(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_send = mock_context_manager_enter.return_value.send
+        mock_recv.side_effect = self.fake_telemetry
+
+        self.resourcer.post("/propeller/pwm/duty", 10)
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(
+            mock_send.call_args,
+            mock.call('{"duty": "0x1E61"}')
+        )
+
+    async def test_get_method(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_recv.side_effect = self.fake_telemetry
+
+        # first initialize
+        self.resourcer.get("/sensors/encoder/angle")
+        await asyncio.sleep(0.1)
+
+        # after waiting for telemetry to arrive, ask
+        result = self.resourcer.get("/sensors/encoder/angle")
+
+        self.assertEqual(result, 22)
+
+    async def test_fake_uris(self, mock_connect, mock_client):
+        mock_context_manager_enter = mock_connect.return_value.__aenter__
+        mock_recv = mock_context_manager_enter.return_value.recv
+        mock_recv.side_effect = self.fake_telemetry
+
+        # first initialize
+        self.resourcer.get("/sensors/encoder/angle")
+        await asyncio.sleep(0.1)
+
+        with self.assertRaises(ValueError):
+            self.resourcer.post("/fakeuri", 10)
+            await asyncio.sleep(0.01)
+
+        with self.assertRaises(ValueError):
+            self.resourcer.get("/fakeuri")
+            await asyncio.sleep(0.01)
 
 
 @mock.patch('nyquist._private.network.ws._WSResourcer.get')
