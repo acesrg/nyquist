@@ -22,12 +22,9 @@ class _WSResourcer():
             self._connected = True
             self._ws = ws
             while ws.open:
-                try:
-                    message = await asyncio.wait_for(ws.recv(), self._timeout)
-                    self._last_ws_message = json.loads(message)
-                    self.new_message = True
-                except asyncio.exceptions.TimeoutError:
-                    pass
+                message = await asyncio.wait_for(ws.recv(), self._timeout)
+                self._last_ws_message = json.loads(message)
+                self.new_message = True
         self._connected = False
 
     async def __async_send(self, message):
