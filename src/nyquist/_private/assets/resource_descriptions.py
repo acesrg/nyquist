@@ -1,7 +1,7 @@
-from nyquist._private.network.http import _Resource
+from nyquist._private.network.base import _Resource
 
 
-AEROPENDULUM_HTTP_RESOURCES = (
+_AEROPENDULUM_HTTP_RESOURCES = (
     _Resource(
         uri="/logger/level",
         methods=["GET", "POST"],
@@ -68,7 +68,7 @@ references for the user.
 """
 
 
-AEROPENDULUM_WS_RESOURCES = (
+_AEROPENDULUM_WS_RESOURCES = (
     _Resource(
         uri="/sensors/encoder/angle",
         methods=["GET"],

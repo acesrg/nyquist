@@ -2,10 +2,10 @@ import asyncio
 from unittest import TestCase, IsolatedAsyncioTestCase, mock
 
 from nyquist.lab.client import System
+from nyquist._private.network.base import _Resource
 from nyquist._private.network.http import (
     _HTTPConnection,
-    _Resourcer,
-    _Resource,
+    _HTTPResourcer,
 )
 from nyquist._private.network.ws import _WSResourcer
 
@@ -69,7 +69,7 @@ class ResourcerTestCase(TestCase):
         self.my_ip = "127.0.0.1"
         self.my_port = 80
         self.my_timeout = 5
-        self.resourcer = _Resourcer(
+        self.resourcer = _HTTPResourcer(
             self.my_ip,
             self.my_port,
             self.my_timeout,
@@ -184,8 +184,8 @@ class WSResourcerTestCase(IsolatedAsyncioTestCase):
 
 @mock.patch('nyquist._private.network.ws._WSResourcer.get')
 @mock.patch('nyquist._private.network.ws._WSResourcer.post')
-@mock.patch('nyquist._private.network.http._Resourcer.get')
-@mock.patch('nyquist._private.network.http._Resourcer.post')
+@mock.patch('nyquist._private.network.http._HTTPResourcer.get')
+@mock.patch('nyquist._private.network.http._HTTPResourcer.post')
 class SystemTestCase(TestCase):
     def setUp(self):
         self.my_ip = "127.0.0.1"

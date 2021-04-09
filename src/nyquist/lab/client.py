@@ -1,11 +1,9 @@
-from nyquist._private.network.http import (
-    _Resourcer,
+from nyquist._private.network.base import (
     _Void,
     _Endpoint,
 )
-from nyquist._private.network.ws import (
-    _WSResourcer,
-)
+from nyquist._private.network.http import _HTTPResourcer
+from nyquist._private.network.ws import _WSResourcer
 
 
 class System:
@@ -57,7 +55,7 @@ class System:
         self, ip, http_resources, ws_resources,
         http_port=80, ws_port=80, timeout=5,
     ):
-        http_resourcer = _Resourcer(ip, http_port, timeout)
+        http_resourcer = _HTTPResourcer(ip, http_port, timeout)
         ws_resourcer = _WSResourcer(ip, ws_port, timeout)
 
         for http_resource in http_resources:
