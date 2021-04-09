@@ -7,7 +7,8 @@ from nyquist._private.network.base import _SystemDescription
 
 aeropendulum_description = _SystemDescription(
     address="192.168.100.41",
-    port=80,
+    http_port=80,
+    ws_port=80,
     timeout=1,
     http_resources=_AEROPENDULUM_HTTP_RESOURCES,
     ws_resources=_AEROPENDULUM_WS_RESOURCES,

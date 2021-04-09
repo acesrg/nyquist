@@ -52,7 +52,8 @@ _SystemDescription = namedtuple(
     "SystemDescription",
     [
         "address",
-        "port",
+        "http_port",
+        "ws_port",
         "timeout",
         "http_resources",
         "ws_resources",

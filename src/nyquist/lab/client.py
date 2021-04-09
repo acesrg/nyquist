@@ -4,6 +4,9 @@ from nyquist._private.network.base import (
 )
 from nyquist._private.network.http import _HTTPResourcer
 from nyquist._private.network.ws import _WSResourcer
+from nyquist.lab.descriptions import (
+    aeropendulum_description,
+)
 
 
 class System:
@@ -52,9 +55,39 @@ class System:
             )
 
     def __init__(
-        self, ip, http_resources, ws_resources,
-        http_port=80, ws_port=80, timeout=5,
+        self, description,
+        ip=None,
+        http_resources=None,
+        ws_resources=None,
+        http_port=None,
+        ws_port=None,
+        timeout=None,
     ):
+        valid_devices = (
+            "aeropendulum",
+        )
+        if description not in valid_devices:
+            raise ValueError(
+                "The device description is not valid,"
+                " should be one of {}".format(valid_devices)
+            )
+
+        device_map = {
+            "aeropendulum": aeropendulum_description
+        }
+        if ip is None:
+            ip = device_map[description].address
+        if http_resources is None:
+            http_resources = device_map[description].http_resources
+        if ws_resources is None:
+            ws_resources = device_map[description].ws_resources
+        if http_port is None:
+            http_port = device_map[description].http_port
+        if ws_port is None:
+            ws_port = device_map[description].ws_port
+        if timeout is None:
+            timeout = device_map[description].timeout
+
         http_resourcer = _HTTPResourcer(ip, http_port, timeout)
         ws_resourcer = _WSResourcer(ip, ws_port, timeout)
 
