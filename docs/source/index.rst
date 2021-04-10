@@ -21,6 +21,11 @@ nyquist's documentation
 .. automethod:: nyquist._private.network.ws._WSResourcer.post
 
 
+.. automodule:: nyquist.control.executor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Indices and tables
 ==================
