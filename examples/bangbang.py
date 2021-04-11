@@ -14,7 +14,7 @@ class MyExperiment(Experiment):
         self.aero.propeller.pwm.duty.post(self.duty_low)
 
     def in_the_loop(self):
-        angle = aero.sensors.encoder.angle.get()
+        angle = self.aero.sensors.encoder.angle.get()
         if angle < self.setpoint_deg:
             self.aero.propeller.pwm.duty.post(self.duty_high)
         else:
@@ -30,9 +30,9 @@ class MyExperiment(Experiment):
 exp = MyExperiment()
 
 # set constants
-self.setpoint_deg = 90
-self.duty_high = 10
-self.duty_low = 5
+exp.setpoint_deg = 90
+exp.duty_high = 10
+exp.duty_low = 5
 
 # and run!
 exp.run()
