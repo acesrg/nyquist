@@ -86,5 +86,17 @@ class Experiment(ABC):
         """
 
     def run(self):
+        """Execute the control experiment, run:
+
+        .. code-block:: python
+
+            before_the_loop()
+            sleep(_before_loop_time_s)
+            while _time_spent < _run_time_s:
+                in_the_loop()
+                sleep(1 /_loop_period_s)
+            sleep(_after_loop_time_s)
+            after_the_loop()
+        """
         self._start_ts = time.monotonic()
         self._loop.run_until_complete(self.control_algorithm())
