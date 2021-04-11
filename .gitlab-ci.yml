@@ -4,7 +4,6 @@ variables:
 stages:
   - lint
   - test
-  - docs
   - deploy
 
 flake8:
@@ -39,24 +38,6 @@ unittest:
       - $CI_PROJECT_DIR/htmlcov
   tags:
     - local
-
-pages:
-  stage: docs
-  image: sphinxdoc/sphinx
-  script:
-    - pip install -r requirements.txt
-    - cd docs
-    - make html
-    - mkdir $CI_PROJECT_DIR/public
-    - mv $CI_PROJECT_DIR/docs/build/html/* $CI_PROJECT_DIR/public
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/public/*
-    expire_in: 1 day
-  rules:
-    - if: '$BUILD_THE_DOCS'
-    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^docs/'
-    - if: '$CI_COMMIT_BRANCH == "master"'
 
 pypi-deploy:
   stage: deploy

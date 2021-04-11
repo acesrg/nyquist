@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from nyquist.control.executor import Experiment
+from nyquist.control import Experiment
 
 
 class MyControlExperiment(Experiment):
