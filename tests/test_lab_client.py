@@ -1,7 +1,7 @@
 import asyncio
 from unittest import TestCase, IsolatedAsyncioTestCase, mock
 
-from nyquist.lab.client import System
+from nyquist.lab import System
 from nyquist._private.network.base import _Resource
 from nyquist._private.network.http import (
     _HTTPConnection,
