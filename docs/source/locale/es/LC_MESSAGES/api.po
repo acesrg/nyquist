@@ -1,0 +1,286 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Marco Miretti
+# This file is distributed under the same license as the nyquist package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nyquist \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-12 23:07+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: ../../source/api.rst:2
+msgid "API"
+msgstr ""
+
+#: ../../source/api.rst:5
+msgid "Lab Client"
+msgstr "Hablar con el experimento"
+
+#: ../../source/api.rst:8
+msgid "The System Class"
+msgstr "La clase *System*"
+
+#: nyquist.lab.System:1 of
+msgid "Generates an object with the complete resource tree as attributes."
+msgstr "Genera un objeto con todos el arbol de recursos como atributos."
+
+#: nyquist.lab.System:3 of
+msgid ""
+"An instance from System defines a laboratory sistem completely, and "
+"allows the user to interact with it."
+msgstr "Una instancia de *System* define completamente a un experimento, y "
+"permite al usuario interactuar con el."
+
+#: nyquist.lab.System:6 of
+msgid ""
+"Given an string with the name of the device to control, the library will "
+"load the default values for it's configuration. Said configuration can "
+"also be modified via keyword optional arguments."
+msgstr "Dada una cadena de caracteres con el nombre del experimento, la "
+"biblioteca cargara los valores por defecto con su configuración. La misma "
+"también puede ser modificada a través de *keyword arguments*."
+
+#: nyquist.lab.System:10 of
+msgid ""
+"The last word of each URL, each resource is an :class:`_HTTPEndpoint` or "
+":class:`_WSEndpoint`, that according the methods assigned to the "
+"resource, will have a "
+":meth:`~nyquist._private.network.http._HTTPResourcer.get` and/or "
+":meth:`~nyquist._private.network.http._HTTPResorcer.post` method... or "
+":meth:`~nyquist._private.network.ws._WSResourcer.get` and/or "
+":meth:`~nyquist._private.network.ws._WSResorcer.post` method. The latter "
+"ones are much faster, but require an open websockets stream."
+msgstr "La última palabra de cada URL, cada recurso es un :class:`_HTTPEndpoint` ó "
+":class:`_WSEndpoint`, que según las funciones asignadas al recurso tendrán un "
+":meth:`~nyquist._private.network.http._HTTPResourcer.get` y/ó "
+":meth:`~nyquist._private.network.http._HTTPResorcer.post` método/s... ó bien "
+":meth:`~nyquist._private.network.ws._WSResourcer.get` y/ó "
+":meth:`~nyquist._private.network.ws._WSResorcer.post` métodos. Estos dos últimos "
+"representan comunicaciones mucho mas veloces, pero requieren un *web-socket*, abierto."
+
+#: nyquist._private.network.http._HTTPResourcer.get
+#: nyquist._private.network.http._HTTPResourcer.post
+#: nyquist.control.Experiment.set_after_loop_time
+#: nyquist.control.Experiment.set_before_loop_time
+#: nyquist.control.Experiment.set_loop_frequency
+#: nyquist.control.Experiment.set_run_time nyquist.lab.System of
+msgid "Parameters"
+msgstr "Parámetros"
+
+#: nyquist.lab.System:19 of
+msgid "The system name."
+msgstr "El nombre del experimento."
+
+#: nyquist.lab.System:21 of
+msgid "An IP address or domain."
+msgstr "Una dirección IP o dominio."
+
+#: nyquist.lab.System:23 of
+msgid "Set of HTTP resources."
+msgstr "Grupo de recursos HTTP."
+
+#: nyquist.lab.System:25 of
+msgid "Set of Websocket resources."
+msgstr "Grupo de recursos Websockets."
+
+#: nyquist.lab.System:27 of
+msgid "Destination HTTP port."
+msgstr "Puerto HTTP de destino."
+
+#: nyquist.lab.System:29 of
+msgid "Destination Websocket port."
+msgstr "Puerto Websockets de destino."
+
+#: nyquist.lab.System:31 of
+msgid "Timeout for each request."
+msgstr "Máxima espera para cada petición."
+
+#: ../../source/api.rst:12
+msgid "Methods for HTTP endpoints"
+msgstr "Funciones para *endpoints* HTTP."
+
+#: nyquist._private.network.http._HTTPResourcer.get:1
+#: nyquist._private.network.http._HTTPResourcer.post:1 of
+msgid "Gets the value of a resource."
+msgstr "Obtiene el valor de un recurso."
+
+#: nyquist._private.network.http._HTTPResourcer.get:3 of
+msgid ""
+"The resource whose value we want. If using any "
+":class:`nyquist.lab.client.System` object, this argument mustn't be "
+"passed."
+msgstr "El recurso cuyo valor queremos. Is estamos usando cualquier objeto "
+":class:`nyquist.lab.client.System`, este argumento debe ser omitido."
+
+#: nyquist._private.network.http._HTTPResourcer.get:7
+#: nyquist._private.network.http._HTTPResourcer.post:9 of
+msgid "The type of return value we expect."
+msgstr "El tipo de valor de retorno que esperamos."
+
+#: nyquist._private.network.http._HTTPResourcer.get
+#: nyquist._private.network.http._HTTPResourcer.post of
+msgid "Returns"
+msgstr "Retorna"
+
+#: nyquist._private.network.http._HTTPResourcer.get:10 of
+msgid "The value of the resource."
+msgstr "El valor del recurso."
+
+#: nyquist._private.network.http._HTTPResourcer.get
+#: nyquist._private.network.http._HTTPResourcer.post of
+msgid "Return type"
+msgstr "Tipo de valor de retorno"
+
+#: nyquist._private.network.http._HTTPResourcer.post:3 of
+msgid ""
+"The resource whose value we want to set. If using any "
+":class:`nyquist.lab.client.System` object, this argument mustn't be "
+"passed."
+msgstr "El recurso cuyo valor queremos modificar. Si estamos usando cualquier objeto "
+":class:`nyquist.lab.client.System`, este argumento debe ser omitido. "
+
+#: nyquist._private.network.http._HTTPResourcer.post:7 of
+msgid "The resource whose value we want to set."
+msgstr "El recurso cuyo valor queremos modificar."
+
+#: nyquist._private.network.http._HTTPResourcer.post:12 of
+msgid "The return code."
+msgstr "El código de respuesta."
+
+#: ../../source/api.rst:17
+msgid "Methods for WS endpoints"
+msgstr "Métodos para *endpoints* Websockets."
+
+#: nyquist._private.network.ws._WSResourcer.get:1 of
+msgid "Gets the last telemetry value of given resource."
+msgstr "Obtiene el último valor de telemetría, del recurso dado."
+
+#: nyquist._private.network.ws._WSResourcer.get:3 of
+msgid ""
+"If the telemetry is not initialized (socket not opened yet) it opens a "
+"websocket and starts receiving telemetry asynchronously. Said telemetry "
+"will be saved, and can be retrieved by this method."
+msgstr "Si la telemetría no ha sido inicializada (el socket aún no ha sido abierto) "
+"abre un *websocket* y comienza a recibir telemetría de forma asincrónica. Dicha "
+"telemetría será guardada y puede ser consultada con ésta función."
+
+#: nyquist._private.network.ws._WSResourcer.get:7 of
+msgid ""
+"Is most likely that this method will return None the first time it's "
+"called, so it's advised to call it in the after_script first."
+msgstr "Lo mas probable es que esta función devuelva None la primera vez "
+"que es llamada, por lo tanto es recomendable llamarla en el script anterior "
+"al lazo de control."
+
+#: nyquist._private.network.ws._WSResourcer.get:10 of
+msgid ""
+"Every call of this method will set "
+":attr:`~nyquist._private.network.ws._WSResourcer.new_message` to False, "
+"and every time a new message is stored, that attribute will be set to "
+"true. This way the user can implement methods to avoid reading the same "
+"message twice."
+msgstr ""
+"Cada llamada de esta función seteará "
+":attr:`~nyquist._private.network.ws._WSResourcer.new_message` a False, "
+"y cada vez que un nuevo mensaje sea guardado, dicho atributo será restaurado "
+" a True. De esta forma el usuario podrá implementar funciones para evitar leer "
+"el mismo valor dos veces."
+
+#: nyquist._private.network.ws._WSResourcer.post:1 of
+msgid "Sets the value of a resource through a fast channel, asynchronously."
+msgstr "Setea el valor de un recurso a través del canal rápido, de forma "
+"asincrónica."
+
+#: ../../source/api.rst:22
+msgid "Experiments"
+msgstr "Experimentos"
+
+#: ../../source/api.rst:25
+msgid "Defining the control algorithm"
+msgstr "Definir un algoritmo de control"
+
+#: nyquist.control.Experiment.before_the_loop:1 of
+msgid ""
+"The user should define this method. When :meth:`Experiment.run` is "
+"called, this method will run first. Then it will wait for some time that "
+"can be set with :meth:`Experiment.set_before_loop_time` and after said "
+"delay, it will run the loop."
+msgstr "El usuario debe definir esta función. Cuando se invoque a :meth:`Experiment.run` "
+"este método será el primero en ejecutarse. Luego se esperará por un tiempo definido mediante "
+":meth:`Experiment.set_before_loop_time`. Luego de dicha espera, se ejecutará el lazo de control."
+
+#: nyquist.control.Experiment.in_the_loop:1 of
+msgid ""
+"The user should define this method. When :meth:`Experiment.run` is "
+"called, this method will run in a loop, after "
+":meth:`Experiment.before_the_loop`. This method will run in a loop with a"
+" frequency established by :meth:`Experiment.set_loop_frequency`."
+msgstr "El usuario debe definir esta función. Durante la ejecución de :meth:`Experiment.run` y luego de "
+"ejecutar :meth:`Experiment.before_the_loop`, "
+"este método se ejecutará en un bucle con frecuencia establecida por :meth:`Experiment.set_loop_frequency`"
+
+#: nyquist.control.Experiment.after_the_loop:1 of
+msgid ""
+"The user should define this method. When :meth:`Experiment.run` is "
+"called, this method will run after the loop, and after a delay that can "
+"be configured with :meth:`Experiment.set_after_loop_time`."
+msgstr "El usuario debe definir esta función. Cuando se ejecute :meth:`Experiment.run` "
+"este método se ejecutará luego del bucle, y luego de un período de espera que puede "
+"ser configurado mediante :meth:`Experiment.set_after_loop_time`."
+
+#: ../../source/api.rst:32
+msgid "Experiment object configuration"
+msgstr "Configuración del objeto experimento"
+
+#: nyquist.control.Experiment.set_loop_frequency:1 of
+msgid "Define the frequency of the control-loop [Hz]."
+msgstr "Define la frecuencia [Hz] del lazo de control."
+
+#: nyquist.control.Experiment.set_loop_frequency:3 of
+msgid "The frequency in hertz."
+msgstr "La frecuencia en *Hertz*."
+
+#: nyquist.control.Experiment.set_run_time:1 of
+msgid ""
+"Define the simulation run time [s]. This includes only the time spent "
+"inside the control loop."
+msgstr "Define el tiempo de simulación [s]. Esto incluye solo el tiempo "
+"empleado durante el el lazo de control."
+
+#: nyquist.control.Experiment.set_after_loop_time:4
+#: nyquist.control.Experiment.set_before_loop_time:4
+#: nyquist.control.Experiment.set_run_time:4 of
+msgid "The time in seconds."
+msgstr "El tiempo en segundos."
+
+#: nyquist.control.Experiment.set_before_loop_time:1 of
+msgid ""
+"Set the delay time between the :meth:`Experiment.before_the_loop` and the"
+" start of the loop."
+msgstr "Setea el tiempo entre :meth:`Experiment.before_the_loop` y el "
+"comienzo del bucle."
+
+#: nyquist.control.Experiment.set_after_loop_time:1 of
+msgid ""
+"Set the delay time between end of the loop and "
+":meth:`Experiment.after_the_loop`."
+msgstr "Setea el tiempo entre el fin del bucle y "
+":meth:`Experiment.after_the_loop`."
+
+#: ../../source/api.rst:39
+msgid "Execution"
+msgstr "Ejecución"
+
+#: nyquist.control.Experiment.run:1 of
+msgid "Execute the control experiment, run:"
+msgstr "Ejecuta un experimento de control, corre:"
+
