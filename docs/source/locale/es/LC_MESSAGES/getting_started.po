@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Marco Miretti
+# This file is distributed under the same license as the nyquist package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nyquist \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-12 23:07+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: ../../source/getting_started.rst:2
+msgid "Getting started"
+msgstr "Empezando"
+
+#: ../../source/getting_started.rst:5
+msgid "Requirements"
+msgstr "Requisitos"
+
+#: ../../source/getting_started.rst:7
+msgid "``nyquist`` requires:"
+msgstr "``nyquist`` necesita"
+
+#: ../../source/getting_started.rst:9
+msgid "Python ≥ 3.6"
+msgstr ""
+
+#: ../../source/getting_started.rst:10
+msgid "websockets_ python package"
+msgstr "El paquete websockets_ para python"
+
+#: ../../source/getting_started.rst:15
+msgid "Installation"
+msgstr "Instalación"
+
+#: ../../source/getting_started.rst:17
+msgid "Install ``nyquist`` with::"
+msgstr "Instalá ``nyquist`` usando"
+
+#: ../../source/getting_started.rst:22
+msgid "Basic example"
+msgstr "Ejemplo básico"
+
+#: ../../source/getting_started.rst:24
+msgid "A basic bang-bang control example with aeropendulum:"
+msgstr "Un ejemplo básico de control utilizando el aeropéndulo:"
+

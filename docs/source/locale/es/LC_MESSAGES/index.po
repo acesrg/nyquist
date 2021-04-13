@@ -1,0 +1,74 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Marco Miretti
+# This file is distributed under the same license as the nyquist package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nyquist \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-12 23:07+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: ../../source/index.rst:25
+msgid "Contents:"
+msgstr "Contenido"
+
+#: ../../source/index.rst:2
+msgid "nyquist"
+msgstr ""
+
+#: ../../source/index.rst:4
+msgid "|pypi-v| |pypi-l| |gitlab-ci| |coverage|"
+msgstr ""
+
+#: ../../source/index.rst:18
+msgid ""
+"``nyquist`` is a library for programming control-systems experiments and "
+"execute them in remote laboratories."
+msgstr "``nyquist`` es una biblioteca para programar experimentos de sistemas "
+"de control y ejecutarlos en laboratorios remotos."
+
+#: ../../source/index.rst:21
+msgid "Here is an example of a bang-bang control loop with ``nyquist``:"
+msgstr "Aquí hay un ejemplo de un controlador bang-bang utilizando ``nyquist``"
+
+#: ../../source/index.rst:30
+msgid "Tutorial"
+msgstr ""
+
+#: ../../source/index.rst:31
+msgid "Get started with ``nyquist``!"
+msgstr "Empezando con ``nyquist``"
+
+#: ../../source/index.rst:39
+msgid "Reference"
+msgstr "Referencias"
+
+#: ../../source/index.rst:40
+msgid "Find all the details about the API."
+msgstr "Enterate de los detalles de la API."
+
+#: ../../source/index.rst:50
+msgid "Indices and tables"
+msgstr "Tablas e índices."
+
+#: ../../source/index.rst:52
+msgid ":ref:`genindex`"
+msgstr ""
+
+#: ../../source/index.rst:53
+msgid ":ref:`modindex`"
+msgstr ""
+
+#: ../../source/index.rst:54
+msgid ":ref:`search`"
+msgstr ""
+
