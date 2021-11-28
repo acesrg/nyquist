@@ -9,7 +9,9 @@ aeropendulum_description = _SystemDescription(
     address="192.168.100.41",
     http_port=80,
     ws_port=80,
-    timeout=1,
+    http_timeout=2,
+    ws_timeout=1,
+    ws_get_mode="new",
     http_resources=_AEROPENDULUM_HTTP_RESOURCES,
     ws_resources=_AEROPENDULUM_WS_RESOURCES,
 )

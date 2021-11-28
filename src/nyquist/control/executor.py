@@ -85,7 +85,7 @@ class Experiment(ABC):
         can be configured with :meth:`Experiment.set_after_loop_time`.
         """
 
-    def run(self):
+    def run(self, blocking=True):
         """Execute the control experiment, run:
 
         .. code-block:: python
@@ -99,4 +99,7 @@ class Experiment(ABC):
             after_the_loop()
         """
         self._start_ts = time.monotonic()
-        self._loop.run_until_complete(self.control_algorithm())
+        if blocking:
+            self._loop.run_until_complete(self.control_algorithm())
+        else:
+            self._loop.create_task(self.control_algorithm())

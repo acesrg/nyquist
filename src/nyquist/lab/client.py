@@ -40,8 +40,12 @@ class System:
     :type http_port: int
     :param ws_port: Destination Websocket port.
     :type ws_port: int
-    :param timeout: Timeout for each request.
-    :type timeout: float
+    :param http_timeout: Timeout for each HTTP request.
+    :type http_timeout: float
+    :param ws_timeout: Timeout for each ws request.
+    :type ws_timeout: float
+    :param ws_get_mode: Strategy to gather messages.
+    :type ws_timeout: str. ("new" or "last").
     """
     @staticmethod
     def __generate_tree(obj, resourcer, iterable_path, resource):
@@ -66,7 +70,9 @@ class System:
         ws_resources=None,
         http_port=None,
         ws_port=None,
-        timeout=None,
+        http_timeout=None,
+        ws_timeout=None,
+        ws_get_mode=None,
     ):
         valid_devices = (
             "aeropendulum",
@@ -90,11 +96,15 @@ class System:
             http_port = device_map[description].http_port
         if ws_port is None:
             ws_port = device_map[description].ws_port
-        if timeout is None:
-            timeout = device_map[description].timeout
+        if http_timeout is None:
+            http_timeout = device_map[description].http_timeout
+        if ws_timeout is None:
+            ws_timeout = device_map[description].ws_timeout
+        if ws_get_mode is None:
+            ws_get_mode = device_map[description].ws_get_mode
 
-        http_resourcer = _HTTPResourcer(ip, http_port, timeout)
-        ws_resourcer = _WSResourcer(ip, ws_port, timeout)
+        http_resourcer = _HTTPResourcer(ip, http_port, http_timeout)
+        ws_resourcer = _WSResourcer(ip, ws_port, ws_timeout, ws_get_mode)
 
         for http_resource in http_resources:
             iterable_path = list(filter(None, http_resource.uri.split("/")))

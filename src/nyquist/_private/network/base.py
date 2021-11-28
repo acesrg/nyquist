@@ -54,7 +54,9 @@ _SystemDescription = namedtuple(
         "address",
         "http_port",
         "ws_port",
-        "timeout",
+        "http_timeout",
+        "ws_timeout",
+        "ws_get_mode",
         "http_resources",
         "ws_resources",
     ]

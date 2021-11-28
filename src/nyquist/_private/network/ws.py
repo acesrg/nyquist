@@ -5,12 +5,14 @@ import websockets
 
 
 class _WSResourcer():
-    def __init__(self, ip, port, timeout):
+    def __init__(self, ip, port, timeout, get_mode):
         self._connected = False
+        self._reconnecting = False
         self._last_ws_message = None
         self._uri = "ws://{}/stream".format(ip)
         self._port = port
         self._timeout = timeout
+        self._get_mode = get_mode
         self._post_uri_resource_map = {
             "/propeller/pwm/duty": "duty",
         }
@@ -24,17 +26,25 @@ class _WSResourcer():
         loop.create_task(self.__gather_telemetry())
 
     async def __gather_telemetry(self):
-        async with websockets.connect(self._uri) as ws:
-            self._connected = True
-            self._ws = ws
-            while ws.open:
-                message = await asyncio.wait_for(ws.recv(), self._timeout)
-                self._last_ws_message = json.loads(message)
-                self.new_message = True
+        async for ws in websockets.connect(self._uri):
+            try:
+                self._connected = True
+                self._reconnecting = False
+                self._ws = ws
+                while ws.open:
+                    message = await asyncio.wait_for(ws.recv(), self._timeout)
+                    self._last_ws_message = json.loads(message)
+                    self.new_message = True
+            except (websockets.ConnectionClosed, websockets.ConnectionClosedError, asyncio.exceptions.TimeoutError) as e:
+                self._reconnecting = True
+                print(e)
+                #self._connected = False
+                continue
+
         self._connected = False
 
     async def __async_send(self, message):
-        while not self._connected:
+        while not self._connected or self._reconnecting:
             await asyncio.sleep(self._timeout / 100)
         await self._ws.send(message)
 
@@ -87,6 +97,9 @@ class _WSResourcer():
             raise ValueError("{} is not a valid uri.".format(resource))
         if not self._connected:
             self.__start_telemetry()
+        if self._get_mode == "new" and not self.new_message:
+            return None
+
         self.new_message = False
         decoded = self._decode(
             self._last_ws_message,
