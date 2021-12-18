@@ -35,7 +35,11 @@ class _WSResourcer():
                     message = await asyncio.wait_for(ws.recv(), self._timeout)
                     self._last_ws_message = json.loads(message)
                     self.new_message = True
-            except (websockets.ConnectionClosed, websockets.ConnectionClosedError, asyncio.exceptions.TimeoutError) as e:
+            except (
+                websockets.ConnectionClosed,
+                websockets.ConnectionClosedError,
+                asyncio.exceptions.TimeoutError
+            ):
                 self._reconnecting = True
                 continue
 
