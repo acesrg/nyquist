@@ -45,8 +45,8 @@ pypi-deploy:
   variables:
     CRYPTOGRAPHY_DONT_BUILD_RUST: 1
   before_script:
-    - pip install --upgrade pip
-    - pip install twine -q
+    - pip install cryptography==3.4.8 -q
+    - pip install twine==3.4.2 -q
     - python3 setup.py sdist
   script:
     - twine upload -u=__token__ -p=$PYPI_UPLOAD_TOKEN dist/*
