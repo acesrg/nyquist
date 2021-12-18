@@ -113,10 +113,12 @@ class WSResourcerTestCase(IsolatedAsyncioTestCase):
         self.my_ip = "127.0.0.1"
         self.my_port = 80
         self.my_timeout = 0.1
+        self.ws_get_mode = 'last'
         self.resourcer = _WSResourcer(
             self.my_ip,
             self.my_port,
             self.my_timeout,
+            self.ws_get_mode,
         )
 
     async def fake_telemetry(self):
