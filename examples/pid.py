@@ -2,6 +2,7 @@ import csv
 import time
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from nyquist.lab import System
 from nyquist.control import Experiment
@@ -29,7 +30,8 @@ class PIDController:
 
     @staticmethod
     def _output_calculation(e, u, a, b):
-        u[0] = (-a[1] * u[1] - a[2] * u[2] + b[0] * e[0] + b[1] * e[1] + b[2] * e[2]) / a[0]
+        u[0] = (-a[1] * u[1] - a[2] * u[2] +
+                b[0] * e[0] + b[1] * e[1] + b[2] * e[2]) / a[0]
 
     def update(self, e_0):
         self.e = [e_0] + self.e[:-1]
@@ -100,7 +102,6 @@ def ziegler_nichols(Ku, Tu, control_type):
         raise RuntimeError("Unknown control type")
 
 
-
 class MyExperiment(Experiment):
 
     def before_the_loop(self):
@@ -110,7 +111,11 @@ class MyExperiment(Experiment):
         self.aero.logger.level.post("LOG_INFO")
         self.data = []  # {'time': %f, 'angle': %f, 'setpoint': %f}
 
-        pid_coeffs = ziegler_nichols(Ku=40, Tu=1.45, control_type='no overshoot')
+        pid_coeffs = ziegler_nichols(
+            Ku=40,
+            Tu=1.45,
+            control_type='no overshoot'
+        )
 
         self.pid = PIDController(
             pid_coeffs['Kp'],
@@ -120,11 +125,11 @@ class MyExperiment(Experiment):
             0.05
         )
         self.linerizer = PendulumLinearizer(
-            41.67880775502065, # 38.45125566,
-            4.570736581055918, # 8.31078772,
+            41.67880775502065,
+            4.570736581055918,
         )
         self.aero.sensors.encoder.angle.get()
-        self.start_ts =  time.monotonic()
+        self.start_ts = time.monotonic()
 
     def in_the_loop(self):
         angle_deg = self.aero.sensors.encoder.angle.get()
@@ -135,7 +140,6 @@ class MyExperiment(Experiment):
         angle_rad = np.deg2rad(angle_deg)
 
         spent = time.monotonic() - self.start_ts
-
 
         pid_duty = self.pid.update(self.setpoint_rad - angle_rad)
         compensator_duty = self.linerizer.compensate(angle_rad)
@@ -168,14 +172,13 @@ exp.set_before_loop_time(2)
 exp.run()
 
 if exp.data:
-    with open(f'pid_{time.time()}.csv','w') as f:
+    with open(f'pid_{time.time()}.csv', 'w') as f:
         fieldnames = exp.data[0].keys()
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writerows(exp.data)
 
 time, sin_angle, duty, sin_setpoint = zip(*[d.values() for d in exp.data])
 
-import matplotlib.pyplot as plt
 plt.figure()
 plt.plot(time, sin_angle, ".", time, sin_setpoint)
 plt.show()

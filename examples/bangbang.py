@@ -1,7 +1,10 @@
-from nyquist.lab import System
-from nyquist.control import Experiment
 import time
 import numpy as np
+import matplotlib.pyplot as plt
+
+from nyquist.lab import System
+from nyquist.control import Experiment
+
 
 # we create an inherited class from Experiment
 class MyExperiment(Experiment):
@@ -15,8 +18,8 @@ class MyExperiment(Experiment):
         self.aero.logger.level.post("LOG_INFO")
         self.angle = []
         self.time = []
-        angle = self.aero.sensors.encoder.angle.get()
-        self.start_ts =  time.monotonic()
+        self.aero.sensors.encoder.angle.get()
+        self.start_ts = time.monotonic()
 
     def in_the_loop(self):
         if self.aero.sensors.encoder.angle._Endpoint__resourcer.new_message:
@@ -24,7 +27,6 @@ class MyExperiment(Experiment):
             self.time.append(time.monotonic() - self.start_ts)
             self.angle.append(angle)
             print(angle)
-            #self.aero.propeller.pwm.duty.post(self.duty_high)
             if angle is not None:
                 if angle < self.setpoint_deg:
                     self.aero.propeller.pwm.duty.post(self.duty_high)
@@ -50,8 +52,6 @@ exp.set_run_time(6)
 exp.set_before_loop_time(1)
 # and run!
 exp.run()
-
-import matplotlib.pyplot as plt
 
 plt.figure()
 print("---")

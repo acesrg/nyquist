@@ -1,6 +1,3 @@
-import asyncio
-from asyncio.exceptions import CancelledError, TimeoutError
-import csv
 import math
 import time
 
@@ -8,7 +5,6 @@ import numpy as np
 
 from nyquist.lab import System
 from nyquist.control import Experiment
-
 
 
 def is_steady(values, ts_s, steady_time_s, margin):
@@ -56,14 +52,28 @@ def coeffs_analysis(angles, duties, plot=False):
     db = db[:-1]
     db = ignore_initial_step(db, MIN_ANGLE)
 
-    res = np.polyfit([np.sin(np.deg2rad(d['angle'])) for d in db], [d['duty'] for d in db], 1)
+    res = np.polyfit(
+        [np.sin(np.deg2rad(d['angle'])) for d in db],
+        [d['duty'] for d in db],
+        1
+    )
     print(f'intercept: {res[0]}, slope: {res[1]}')
 
     if plot:
         import matplotlib.pyplot as plt
         PLOT_RESOLUTION = 100
-        x_axis = np.linspace(np.sin(np.deg2rad(MIN_ANGLE)), np.sin(np.deg2rad(MAX_ANGLE)), PLOT_RESOLUTION)
-        plt.plot([np.sin(np.deg2rad(d['angle'])) for d in db], [d['duty'] for d in db], '.', x_axis, res[1] + res[0] * x_axis)
+        x_axis = np.linspace(
+            np.sin(np.deg2rad(MIN_ANGLE)),
+            np.sin(np.deg2rad(MAX_ANGLE)),
+            PLOT_RESOLUTION
+        )
+        plt.plot(
+            [np.sin(np.deg2rad(d['angle'])) for d in db],
+            [d['duty'] for d in db],
+            '.',
+            x_axis,
+            res[1] + res[0] * x_axis
+        )
         plt.show()
 
 
@@ -80,7 +90,7 @@ class MyExperiment(Experiment):
         self.aero.sensors.encoder.angle.get()
         self.aero.propeller.pwm.duty.post(self.duty_start)
         self.prev_duty = self.duty_start
-        self.start_ts =  time.monotonic()
+        self.start_ts = time.monotonic()
 
     def in_the_loop(self):
         angle = self.aero.sensors.encoder.angle.get()
@@ -119,7 +129,6 @@ class MyExperiment(Experiment):
         self.aero.propeller.pwm.status.post("disabled")
         self.aero.propeller.pwm.status.post("initialized")
         coeffs_analysis(self.angles, self.duties, plot=True)
-
 
 
 exp = MyExperiment()
