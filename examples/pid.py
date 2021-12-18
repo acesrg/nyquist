@@ -1,7 +1,10 @@
+import csv
+import time
+
+import numpy as np
+
 from nyquist.lab import System
 from nyquist.control import Experiment
-import time
-import numpy as np
 
 
 MIN_ANGLE = 22.0
@@ -56,6 +59,48 @@ def safety_check(value, max_value, safe_value):
     return value
 
 
+def ziegler_nichols(Ku, Tu, control_type):
+    if control_type == 'classic':
+        return {
+            'Kp': 0.6 * Ku,
+            'Ki': 1.2 * Ku / Tu,
+            'Kd': 0.075 * Ku * Tu,
+        }
+    elif control_type == 'p':
+        return {
+            'Kp': 0.5 * Ku,
+            'Ki': 0 * Ku / Tu,
+            'Kd': 0 * Ku * Tu,
+        }
+    elif control_type == 'pi':
+        return {
+            'Kp': 0.45 * Ku,
+            'Ki': 0.54 * Ku / Tu,
+            'Kd': 0 * Ku * Tu,
+        }
+    elif control_type == 'pd':
+        return {
+            'Kp': 0.8 * Ku,
+            'Ki': 0 * Ku / Tu,
+            'Kd': 0.1 * Ku * Tu,
+        }
+    elif control_type == 'some overshoot':
+        return {
+            'Kp': 0.333 * Ku,
+            'Ki': 0.666 * Ku / Tu,
+            'Kd': 0.111 * Ku * Tu,
+        }
+    elif control_type == 'no overshoot':
+        return {
+            'Kp': 0.2 * Ku,
+            'Ki': 0.4 * Ku / Tu,
+            'Kd': 0.0666 * Ku * Tu,
+        }
+    else:
+        raise RuntimeError("Unknown control type")
+
+
+
 class MyExperiment(Experiment):
 
     def before_the_loop(self):
@@ -63,29 +108,49 @@ class MyExperiment(Experiment):
         self.aero.propeller.pwm.status.post("initialized")
         self.aero.telemetry.period.post(20)
         self.aero.logger.level.post("LOG_INFO")
-        self.angle = []
-        self.time = []
+        self.data = []  # {'time': %f, 'angle': %f, 'setpoint': %f}
 
-        self.pid = PIDController(19.8, 22.61, 4.33, 20, 0.05)
-        self.linerizer = PendulumLinearizer(38.45125566, 8.31078772)
-        angle = self.aero.sensors.encoder.angle.get()
+        pid_coeffs = ziegler_nichols(Ku=40, Tu=1.45, control_type='no overshoot')
+
+        self.pid = PIDController(
+            pid_coeffs['Kp'],
+            pid_coeffs['Ki'],
+            pid_coeffs['Kd'],
+            20,
+            0.05
+        )
+        self.linerizer = PendulumLinearizer(
+            41.67880775502065, # 38.45125566,
+            4.570736581055918, # 8.31078772,
+        )
+        self.aero.sensors.encoder.angle.get()
         self.start_ts =  time.monotonic()
 
     def in_the_loop(self):
-        angle = self.aero.sensors.encoder.angle.get()
-        if angle is not None:
+        angle_deg = self.aero.sensors.encoder.angle.get()
+        if angle_deg is None:
+            return
 
-            self.time.append(time.monotonic() - self.start_ts)
-            self.angle.append(angle)
+        angle_deg = avoid_negative_angles(angle_deg)
+        angle_rad = np.deg2rad(angle_deg)
 
-            angle = avoid_negative_angles(angle)
-            angle_rad = np.deg2rad(angle)
+        spent = time.monotonic() - self.start_ts
 
-            pid_duty = self.pid.update(self.setpoint_rad - angle_rad)
-            compensator_duty = self.linerizer.compensate(angle_rad)
-            duty = pid_duty + compensator_duty
-            duty = safety_check(duty, self.max_duty, SAFE_DUTY)
-            self.aero.propeller.pwm.duty.post(duty)
+
+        pid_duty = self.pid.update(self.setpoint_rad - angle_rad)
+        compensator_duty = self.linerizer.compensate(angle_rad)
+        duty = pid_duty + compensator_duty
+        duty = safety_check(duty, self.max_duty, SAFE_DUTY)
+        self.aero.propeller.pwm.duty.post(duty)
+
+        self.data.append(
+            {
+                'time': spent,
+                'sin_angle': np.sin(angle_rad),
+                'duty': duty,
+                'sin_setpoint': np.sin(self.setpoint_rad),
+            }
+        )
 
     def after_the_loop(self):
         self.aero.propeller.pwm.duty.post(0)
@@ -98,12 +163,19 @@ exp = MyExperiment()
 exp.setpoint_rad = np.deg2rad(50)
 exp.max_duty = 55
 exp.set_loop_frequency(20)
-exp.set_run_time(10)
-exp.set_before_loop_time(1)
+exp.set_run_time(20)
+exp.set_before_loop_time(2)
 exp.run()
+
+if exp.data:
+    with open(f'pid_{time.time()}.csv','w') as f:
+        fieldnames = exp.data[0].keys()
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writerows(exp.data)
+
+time, sin_angle, duty, sin_setpoint = zip(*[d.values() for d in exp.data])
 
 import matplotlib.pyplot as plt
 plt.figure()
-setpoint = [np.sin(exp.setpoint_rad)]*len(exp.angle)
-plt.plot(exp.time, np.sin(np.deg2rad(exp.angle)), ".", exp.time, setpoint)
+plt.plot(time, sin_angle, ".", time, sin_setpoint)
 plt.show()
