@@ -37,8 +37,6 @@ class _WSResourcer():
                     self.new_message = True
             except (websockets.ConnectionClosed, websockets.ConnectionClosedError, asyncio.exceptions.TimeoutError) as e:
                 self._reconnecting = True
-                print(e)
-                #self._connected = False
                 continue
 
         self._connected = False
