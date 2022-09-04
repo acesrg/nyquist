@@ -6,6 +6,7 @@ from nyquist._private.network.http import _HTTPResourcer
 from nyquist._private.network.ws import _WSResourcer
 from nyquist.lab.descriptions import (
     aeropendulum_description,
+    motor_encoder_description,
 )
 
 
@@ -84,7 +85,8 @@ class System:
             )
 
         device_map = {
-            "aeropendulum": aeropendulum_description
+            "aeropendulum": aeropendulum_description,
+            "motor-encoder": motor_encoder_description,
         }
         if ip is None:
             ip = device_map[description].address

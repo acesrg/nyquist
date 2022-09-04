@@ -18,8 +18,6 @@ installability:
   script:
     - pip install -r requirements.txt
     - pip install .
-  tags:
-    - local
 
 unittest:
   stage: test
@@ -36,8 +34,6 @@ unittest:
   artifacts:
     paths:
       - $CI_PROJECT_DIR/htmlcov
-  tags:
-    - local
 
 pypi-deploy:
   stage: deploy
@@ -52,5 +48,3 @@ pypi-deploy:
     - twine upload -u=__token__ -p=$PYPI_UPLOAD_TOKEN dist/*
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v\d+.\d+.\d+/'
-  tags:
-    - local 

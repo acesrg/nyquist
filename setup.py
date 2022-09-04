@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name="nyquist",
-    version="0.2.3",
+    version="0.2.4",
     author="Marco Miretti",
     author_email="marcomiretti@gmail.com",
     description=("A client for control-systems laboratories."),
