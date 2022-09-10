@@ -75,19 +75,18 @@ class System:
         ws_timeout=None,
         ws_get_mode=None,
     ):
-        valid_devices = (
-            "aeropendulum",
-        )
+        device_map = {
+            "aeropendulum": aeropendulum_description,
+            "motor-encoder": motor_encoder_description,
+        }
+        valid_devices = device_map.keys()
+
         if description not in valid_devices:
             raise ValueError(
                 "The device description is not valid,"
                 " should be one of {}".format(valid_devices)
             )
 
-        device_map = {
-            "aeropendulum": aeropendulum_description,
-            "motor-encoder": motor_encoder_description,
-        }
         if ip is None:
             ip = device_map[description].address
         if http_resources is None:
