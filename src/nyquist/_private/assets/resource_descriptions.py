@@ -146,6 +146,14 @@ _MOTOR_ENCODER_HTTP_RESOURCES = (
             "Values: float"
         )
     ),
+    _Resource(
+        uri="/telemetry/period",
+        methods=["GET", "POST"],
+        docs=(
+            "The period of the websocket emmited telemetry [ms].\n"
+            "Values: float from 1 to 60000"
+        )
+    ),
 )
 """
 The motor-encoder system HTTP resources, containing uri path, methods, and
