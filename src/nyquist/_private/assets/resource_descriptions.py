@@ -174,7 +174,7 @@ _MOTOR_ENCODER_WS_RESOURCES = (
         )
     ),
     _Resource(
-        uri="/steam/duty",
+        uri="/stream/duty",
         methods=["POST"],
         docs=(
             """The motor pwm duty percentage [0 to 100].
