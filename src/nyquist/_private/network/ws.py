@@ -21,6 +21,10 @@ class _WSResourcer():
         }
         self.new_message = False
 
+    @staticmethod
+    def __get_resource_tag_from_uri(uri):
+        return uri.rsplit('/', 1)[-1]
+
     def __start_telemetry(self):
         loop = asyncio.get_event_loop()
         loop.create_task(self.__gather_telemetry())
@@ -113,11 +117,12 @@ class _WSResourcer():
         """Sets the value of a resource through a fast channel,
         asynchronously.
         """
-        if resource not in self._post_uri_resource_map:
-            raise ValueError("{} is not a valid uri.".format(resource))
         if not self._connected:
             self.__start_telemetry()
 
         loop = asyncio.get_event_loop()
-        encoded = self._encode(value, self._post_uri_resource_map[resource])
+        encoded = self._encode(
+            value,
+            self.__get_resource_tag_from_uri(resource),
+        )
         loop.create_task(self.__async_send(encoded))

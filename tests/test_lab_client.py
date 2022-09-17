@@ -168,23 +168,6 @@ class WSResourcerTestCase(IsolatedAsyncioTestCase):
 
         self.assertEqual(result, 22)
 
-    async def test_fake_uris(self, mock_connect, mock_client):
-        mock_context_manager_enter = mock_connect.return_value.__aenter__
-        mock_recv = mock_context_manager_enter.return_value.recv
-        mock_recv.side_effect = self.fake_telemetry
-
-        # first initialize
-        self.resourcer.get("/sensors/encoder/angle")
-        await asyncio.sleep(0.1)
-
-        with self.assertRaises(ValueError):
-            self.resourcer.post("/fakeuri", 10)
-            await asyncio.sleep(0.01)
-
-        with self.assertRaises(ValueError):
-            self.resourcer.get("/fakeuri")
-            await asyncio.sleep(0.01)
-
 
 @mock.patch('nyquist._private.network.ws._WSResourcer.get')
 @mock.patch('nyquist._private.network.ws._WSResourcer.post')
